@@ -65,8 +65,7 @@ resource "aws_security_group" "f5" {
 }
 
 data "template_file" "f5_init" {
-  template = "${file("f5.tpl")}"
-
+  template = "${file("./f5.tpl")}"
   vars = {
     password = "${random_string.password.result}"
   }
