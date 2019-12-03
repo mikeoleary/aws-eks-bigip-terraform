@@ -75,3 +75,8 @@ resource "aws_eks_cluster" "demo" {
     "aws_iam_role_policy_attachment.demo-cluster-AmazonEKSServicePolicy",
   ]
 }
+
+resource "local_file" "kubeconfig" {
+    content = "${local.kubeconfig}"
+    filename = "${path.module}/kubeconfig"
+}
