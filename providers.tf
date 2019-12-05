@@ -19,3 +19,32 @@ data "aws_availability_zones" "available" {}
 # See workstation-external-ip.tf for additional information.
 provider "http" {}
 
+data "aws_eks_cluster" "demo" {
+  name = "${aws_eks_cluster.demo.name}"
+}
+
+data "aws_eks_cluster_auth" "demo" {
+  name = "${aws_eks_cluster.demo.name}"
+}
+
+provider "kubernetes" {
+  host = "${data.aws_eks_cluster.demo.endpoint}"
+  cluster_ca_certificate = "${base64decode(aws_eks_cluster.demo.certificate_authority.0.data)}"
+  token = "${data.aws_eks_cluster_auth.demo.token}"
+  load_config_file = false
+}
+
+provider "helm" {
+  install_tiller  = true
+  namespace = "${kubernetes_service_account.tiller.metadata[0].namespace}"
+  service_account = "${kubernetes_service_account.tiller.metadata[0].name}"
+
+  kubernetes {
+    host = "${data.aws_eks_cluster.demo.endpoint}"
+    cluster_ca_certificate = "${base64decode(aws_eks_cluster.demo.certificate_authority.0.data)}"
+    token = "${data.aws_eks_cluster_auth.demo.token}"
+    load_config_file = false
+  }
+}
+
+
