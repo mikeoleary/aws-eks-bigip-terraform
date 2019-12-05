@@ -20,13 +20,11 @@ data "aws_availability_zones" "available" {}
 provider "http" {}
 
 data "aws_eks_cluster" "demo" {
-  name = "${aws_eks_cluster.demo.name}"
-  id = "${aws_eks_cluster.demo.id}"
+  name = "${aws_eks_cluster.demo.id}"
 }
 
 data "aws_eks_cluster_auth" "demo" {
-  name = "${aws_eks_cluster.demo.name}"
-  id = "${aws_eks_cluster.demo.id}"
+  name = "${aws_eks_cluster.demo.id}"
 }
 
 provider "kubernetes" {

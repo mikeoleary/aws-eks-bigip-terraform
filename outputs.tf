@@ -48,6 +48,8 @@ users:
         - "-i"
         - "${var.cluster-name}"
 KUBECONFIG
+
+  public_dns_url = "https://${aws_instance.f5.public_dns}"
 }
 
 output "config_map_aws_auth" {
@@ -60,6 +62,13 @@ output "kubeconfig" {
 
 output "public_dns" {
   value = "${aws_instance.f5.public_dns}"
+}
+
+output "public_dns_url" {
+  value = "${local.public_dns_url}"
+}
+output "private_ip" {
+  value = "${aws_instance.f5.private_ip}"
 }
 
 output "password" {
