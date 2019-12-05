@@ -27,7 +27,7 @@ resource "kubernetes_secret" "f5cis" {
 
   data = {
     username = "admin"
-    password = "${random_string.password.result}"
+    password = "${random_password.password.result}"
   }
   #type = "kubernetes.io/service-account-token"
 }

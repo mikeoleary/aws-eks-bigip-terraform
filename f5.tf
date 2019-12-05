@@ -1,4 +1,4 @@
-resource "random_string" "password" {
+resource "random_password" "password" {
   length  = 10
   special = false
 }
@@ -67,6 +67,6 @@ resource "aws_security_group" "f5" {
 data "template_file" "f5_init" {
   template = "${file("./f5.tpl")}"
   vars = {
-    password = "${random_string.password.result}"
+    password = "${random_password.password.result}"
   }
 }
