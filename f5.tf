@@ -1,4 +1,4 @@
-resource "random_string" "password" {
+resource "random_password" "password" {
   length  = 10
   special = false
 }
@@ -10,7 +10,6 @@ resource "aws_instance" "f5" {
   ami = "ami-04aeb21365c18ca08" #west-us-2
 
   instance_type               = "m5.xlarge"
-  private_ip                  = "10.0.0.200"
   associate_public_ip_address = true
   subnet_id                   = "${aws_subnet.demo[0].id}"
   vpc_security_group_ids      = ["${aws_security_group.f5.id}"]
@@ -67,6 +66,6 @@ resource "aws_security_group" "f5" {
 data "template_file" "f5_init" {
   template = "${file("./f5.tpl")}"
   vars = {
-    password = "${random_string.password.result}"
+    password = "${random_password.password.result}"
   }
 }
