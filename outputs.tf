@@ -57,3 +57,11 @@ output "config_map_aws_auth" {
 output "kubeconfig" {
   value = "${local.kubeconfig}"
 }
+
+output "public_dns" {
+  value = "${aws_instance.f5.public_dns}"
+}
+
+output "password" {
+  value = "${random_password.password.result}"
+}
