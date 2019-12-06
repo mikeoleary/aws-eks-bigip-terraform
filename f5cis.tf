@@ -16,7 +16,9 @@ resource "helm_release" "f5cis" {
     name  = "bigip_login_secret"
     value = "${kubernetes_secret.f5cis.metadata[0].name}"
   }
-
+  depends_on = [
+    "kubernetes_service_account.tiller", "kubernetes_cluster_role_binding.tiller"
+  ]
 }
 
 resource "kubernetes_secret" "f5cis" {
@@ -30,4 +32,7 @@ resource "kubernetes_secret" "f5cis" {
     password = "${random_password.password.result}"
   }
   #type = "kubernetes.io/service-account-token"
+  depends_on = [
+    "aws_eks_node_group.demo"
+  ]
 }

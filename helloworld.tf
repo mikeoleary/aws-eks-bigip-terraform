@@ -32,6 +32,9 @@ resource "kubernetes_deployment" "f5helloworld-deployment" {
       }
     }
   }
+  depends_on = [
+    "aws_eks_node_group.demo"
+  ]
 }
 
 resource "kubernetes_service" "f5helloworld" {
@@ -40,7 +43,7 @@ resource "kubernetes_service" "f5helloworld" {
   }
   spec {
     selector = {
-app = kubernetes_deployment.f5helloworld-deployment.spec.0.template.0.metadata[0].labels.app
+      app = kubernetes_deployment.f5helloworld-deployment.spec.0.template.0.metadata[0].labels.app
     }
     port {
       port        = 80
@@ -49,5 +52,8 @@ app = kubernetes_deployment.f5helloworld-deployment.spec.0.template.0.metadata[0
 
     type = "NodePort"
   }
+  depends_on = [
+    "aws_eks_node_group.demo"
+  ]
 }
 
