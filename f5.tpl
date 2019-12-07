@@ -9,3 +9,4 @@ tmsh modify auth user admin shell bash
 tmsh modify sys global-settings gui-setup disabled
 
 tmsh save sys config
+tmsh create auth partition kubernetes
