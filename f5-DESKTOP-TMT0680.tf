@@ -1,4 +1,3 @@
-
 resource "random_password" "password" {
   length  = 10
   special = false
@@ -70,30 +69,3 @@ data "template_file" "f5_init" {
     password = "${random_password.password.result}"
   }
 }
-# download rpm
-resource "null_resource" "download_as3" {
-  provisioner "local-exec" {
-    command = "wget ${var.as3_rpm_url} -O ./as3/"
-  }
-}
-
-# install rpm to BIG-IP
-resource "null_resource" "install_as3" {
-  provisioner "local-exec" {
-    command = "tmp=$(mktemp) && cat helloworld.json | jq '.app1.app1.serviceMain.virtualAddresses |= [${var.vip_address}]' > $tmp && mv $tmp helloworld.json"
-    working_dir = "${path.module}/as3"
-  }
-  provisioner "local-exec" {
-    command = "./install_as3.sh ${aws_instance.f5.public_dns}:8443 admin:${random_password.password.result} ${var.as3_rpm}"
-    working_dir = "${path.module}/as3"
-  }
-  depends_on = ["null_resource.download_as3", "aws_instance.f5"]
-}
-
-# deploy application using as3
-resource "bigip_as3" "helloworld" {
-  as3_json    = "${file("as3/helloworld.json")}"
-  tenant_name = "app1"
-  depends_on  = [null_resource.install_as3]
-}
-
