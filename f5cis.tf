@@ -17,7 +17,7 @@ resource "helm_release" "f5cis" {
     value = "${kubernetes_secret.f5cis.metadata[0].name}"
   }
   depends_on = [
-    "kubernetes_service_account.tiller", "kubernetes_cluster_role_binding.tiller"
+    "kubernetes_service_account.tiller", "kubernetes_cluster_role_binding.tiller", "aws_instance.f5"
   ]
 }
 
