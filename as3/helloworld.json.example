@@ -11,6 +11,7 @@
         "class": "Service_HTTP",
         "virtualPort": 80,
         "virtualAddresses": [
+            "${private_ip}"
         ],
         "pool": "web_pool",
         "persistenceMethods": [],

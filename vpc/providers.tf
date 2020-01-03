@@ -34,12 +34,6 @@ provider "kubernetes" {
   load_config_file = false
 }
 
-provider "bigip" {
-  address  = "https://${aws_instance.f5.public_ip}:8443"
-  username = "admin"
-  password = "${random_password.password.result}"
-}
-
 provider "helm" {
   install_tiller  = true
   namespace = "${kubernetes_service_account.tiller.metadata[0].namespace}"
