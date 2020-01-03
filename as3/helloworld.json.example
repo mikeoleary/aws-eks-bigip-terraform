@@ -1,0 +1,32 @@
+{
+  "class": "ADC",
+  "schemaVersion": "3.7.0",
+  "id": "app1",
+  "app1": {
+    "class": "Tenant",
+    "app1": {
+      "class": "Application",
+      "template": "http",
+      "serviceMain": {
+        "class": "Service_HTTP",
+        "virtualPort": 80,
+        "virtualAddresses": [
+            "${private_ip}"
+        ],
+        "pool": "web_pool",
+        "persistenceMethods": [],
+        "profileMultiplex": {
+          "bigip": "/Common/oneconnect"
+         }
+      },
+      "web_pool": {
+        "class": "Pool",
+        "monitors": [
+          "http"
+        ],
+        "members": [
+        ]
+      }
+    }
+  }
+}
