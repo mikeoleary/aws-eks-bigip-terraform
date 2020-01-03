@@ -65,35 +65,33 @@ resource "aws_security_group" "f5" {
 }
 
 data "template_file" "f5_init" {
-  template = "${file("./f5.tpl")}"
+  template = "${file("../vpc/f5.tpl")}"
   vars = {
     password = "${random_password.password.result}"
   }
 }
-# download rpm
-resource "null_resource" "download_as3" {
-  provisioner "local-exec" {
-    command = "wget ${var.as3_rpm_url} -O ./as3/"
+
+data "template_file" "tfvars" {
+  template = "${file("../as3/terraform.tfvars.example")}"
+  vars = {
+    password = "${random_password.password.result}"
+    address = "${aws_instance.f5.public_ip}"
   }
+}
+resource "local_file" "tfvars" {
+  content  = "${data.template_file.tfvars.rendered}"
+  filename = "../as3/terraform.tfvars"
+}
+data "template_file" "helloworld" {
+  template = "${file("../as3/helloworld.json.example")}"
+  vars = {
+    private_ip = "${aws_instance.f5.private_ip}"
+  }
+}
+resource "local_file" "helloworld" {
+  content  = "${data.template_file.helloworld.rendered}"
+  filename = "../as3/helloworld.json"
 }
 
-# install rpm to BIG-IP
-resource "null_resource" "install_as3" {
-  provisioner "local-exec" {
-    command = "tmp=$(mktemp) && cat helloworld.json | jq '.app1.app1.serviceMain.virtualAddresses |= [${var.vip_address}]' > $tmp && mv $tmp helloworld.json"
-    working_dir = "${path.module}/as3"
-  }
-  provisioner "local-exec" {
-    command = "./install_as3.sh ${aws_instance.f5.public_dns}:8443 admin:${random_password.password.result} ${var.as3_rpm}"
-    working_dir = "${path.module}/as3"
-  }
-  depends_on = ["null_resource.download_as3", "aws_instance.f5"]
-}
 
-# deploy application using as3
-resource "bigip_as3" "helloworld" {
-  as3_json    = "${file("as3/helloworld.json")}"
-  tenant_name = "app1"
-  depends_on  = [null_resource.install_as3]
-}
 
