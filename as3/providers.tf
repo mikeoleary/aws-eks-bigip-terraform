@@ -1,6 +1,6 @@
 
 provider "bigip" {
-  address = "https://${var.address}:8443"
+  address = "https://${var.address}"
   username = "admin"
   password = "${var.password}"
 }
