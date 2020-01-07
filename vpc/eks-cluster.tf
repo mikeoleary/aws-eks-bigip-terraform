@@ -67,7 +67,7 @@ resource "aws_eks_cluster" "demo" {
 
   vpc_config {
     security_group_ids = ["${aws_security_group.demo-cluster.id}"]
-    subnet_ids         = "${aws_subnet.demo[*].id}"
+    subnet_ids         = "${aws_subnet.private[*].id}"
   }
 
   depends_on = [
@@ -75,8 +75,9 @@ resource "aws_eks_cluster" "demo" {
     "aws_iam_role_policy_attachment.demo-cluster-AmazonEKSServicePolicy",
   ]
 }
-
+/*
 resource "local_file" "kubeconfig" {
     content = "${local.kubeconfig}"
     filename = "${path.module}/kubeconfig"
 }
+*/

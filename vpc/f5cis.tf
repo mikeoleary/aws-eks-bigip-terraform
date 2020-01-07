@@ -11,7 +11,14 @@ resource "helm_release" "f5cis" {
     name  = "args.bigip_url"
     value = "${aws_instance.f5.private_ip}"  
   }
-
+  set {
+    name  = "args.bigip_partition"
+    value = "kubernetes"  
+  }
+    set {
+    name  = "args.insecure"
+    value = "true"  
+  }
   set {
     name  = "bigip_login_secret"
     value = "${kubernetes_secret.f5cis.metadata[0].name}"
