@@ -20,3 +20,6 @@ variable "vpc_cidr_block" {
 variable "vip_address" {
   default = "10.0.200.0"
 }
+variable "keypair" {
+  default = "mikeo-keypair"
+}

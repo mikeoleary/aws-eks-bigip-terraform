@@ -13,6 +13,11 @@ resource "aws_eip" "ext" {
   network_interface         = "${aws_network_interface.nic1.id}"
   associate_with_private_ip = "${aws_network_interface.nic1.private_ip}"
 }
+resource "aws_eip" "ext2" {
+  vpc                       = true
+  network_interface         = "${aws_network_interface.nic1.id}"
+  associate_with_private_ip = tolist(aws_network_interface.nic1.private_ips)[1]
+}
 resource "aws_network_interface" "nic0" {
   subnet_id   = "${aws_subnet.mgmt[0].id}"
   security_groups = ["${aws_security_group.f5.id}"]
@@ -23,6 +28,7 @@ resource "aws_network_interface" "nic0" {
 resource "aws_network_interface" "nic1" {
   subnet_id   = "${aws_subnet.public[0].id}"
   security_groups = ["${aws_security_group.f5.id}"]
+  private_ips_count = 1
   tags = {
     Name = "nic1"
   }
@@ -55,7 +61,7 @@ resource "aws_instance" "f5" {
   #subnet_id                   = "${aws_subnet.demo[0].id}"
   #vpc_security_group_ids      = ["${aws_security_group.f5.id}"]
   user_data                   = "${data.template_file.f5_init.rendered}"
-  key_name                    = "mikeo-keypair"
+  key_name                    = "${var.keypair}"
   root_block_device { delete_on_termination = true }
 
   tags = {
@@ -110,6 +116,8 @@ data "template_file" "f5_init" {
   template = "${file("../vpc/f5.tpl")}"
   vars = {
     password = "${random_password.password.result}"
+    ext_self_ip = "${aws_network_interface.nic1.private_ip}"
+    int_self_ip = "${aws_network_interface.nic2.private_ip}"
   }
 }
 

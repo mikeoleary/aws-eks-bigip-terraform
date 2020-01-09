@@ -59,17 +59,21 @@ resource "kubernetes_service" "f5helloworld" {
       name = "f5helloworld-service"
     }
 
-    type = "NodePort"
+    type = "ClusterIP"
   }
   depends_on = [
     "aws_eks_node_group.demo"
   ]
 }
 
+locals  {
+  nic1_private_ips_list = tolist(aws_network_interface.nic1.private_ips)
+}
+
 data "template_file" "configmap" {
   template = "${file("../vpc/helloworld.configmap.example")}"
   vars = {
-    private_ip = "10.0.0.181"
+    private_ip = "${local.nic1_private_ips_list[1]}"
   }
 }
 
@@ -86,4 +90,7 @@ resource "kubernetes_config_map" "helloworld" {
   data = {
     template = "${data.template_file.configmap.rendered}"
   }
+    depends_on = [
+    "kubernetes_service.f5helloworld"
+  ]
 }
