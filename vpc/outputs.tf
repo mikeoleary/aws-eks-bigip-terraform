@@ -70,7 +70,12 @@ output "public_dns_url" {
 output "private_ip" {
   value = "${aws_instance.f5.private_ip}"
 }
-
+output "private_ips_nic1" {
+  value = "${aws_network_interface.nic1.private_ips}"
+}
 output "password" {
   value = "${random_password.password.result}"
+}
+output "public_ip_app" {
+  value = "${aws_eip.ext2.public_ip}"
 }

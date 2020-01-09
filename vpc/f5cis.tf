@@ -23,6 +23,10 @@ resource "helm_release" "f5cis" {
     name  = "bigip_login_secret"
     value = "${kubernetes_secret.f5cis.metadata[0].name}"
   }
+  set {
+    name  = "args.pool-member-type"
+    value = "cluster"
+  }
   depends_on = [
     "kubernetes_service_account.tiller", "kubernetes_cluster_role_binding.tiller", "aws_instance.f5"
   ]
