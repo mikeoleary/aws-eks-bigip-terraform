@@ -77,5 +77,5 @@ output "password" {
   value = "${random_password.password.result}"
 }
 output "public_ip_app" {
-  value = "${aws_eip.ext2.public_ip}"
+  value = "${aws_eip.ext.public_ip}"
 }

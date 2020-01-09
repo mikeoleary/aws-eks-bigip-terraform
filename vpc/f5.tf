@@ -13,11 +13,7 @@ resource "aws_eip" "ext" {
   network_interface         = "${aws_network_interface.nic1.id}"
   associate_with_private_ip = "${aws_network_interface.nic1.private_ip}"
 }
-resource "aws_eip" "ext2" {
-  vpc                       = true
-  network_interface         = "${aws_network_interface.nic1.id}"
-  associate_with_private_ip = tolist(aws_network_interface.nic1.private_ips)[1]
-}
+
 resource "aws_network_interface" "nic0" {
   subnet_id   = "${aws_subnet.mgmt[0].id}"
   security_groups = ["${aws_security_group.f5.id}"]
@@ -28,7 +24,6 @@ resource "aws_network_interface" "nic0" {
 resource "aws_network_interface" "nic1" {
   subnet_id   = "${aws_subnet.public[0].id}"
   security_groups = ["${aws_security_group.f5.id}"]
-  private_ips_count = 1
   tags = {
     Name = "nic1"
   }
@@ -57,9 +52,6 @@ resource "aws_instance" "f5" {
     device_index         = 2
   }
   instance_type               = "m5.xlarge"
-  #associate_public_ip_address = true
-  #subnet_id                   = "${aws_subnet.demo[0].id}"
-  #vpc_security_group_ids      = ["${aws_security_group.f5.id}"]
   user_data                   = "${data.template_file.f5_init.rendered}"
   key_name                    = "${var.keypair}"
   root_block_device { delete_on_termination = true }
@@ -120,18 +112,3 @@ data "template_file" "f5_init" {
     int_self_ip = "${aws_network_interface.nic2.private_ip}"
   }
 }
-
-data "template_file" "tfvars" {
-  template = "${file("../as3/terraform.tfvars.example")}"
-  vars = {
-    password = "${random_password.password.result}"
-    address = "${aws_instance.f5.public_ip}"
-  }
-}
-resource "local_file" "tfvars" {
-  content  = "${data.template_file.tfvars.rendered}"
-  filename = "../as3/terraform.tfvars"
-}
-
-
-
