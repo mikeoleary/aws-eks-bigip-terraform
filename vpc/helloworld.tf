@@ -66,14 +66,10 @@ resource "kubernetes_service" "f5helloworld" {
   ]
 }
 
-locals  {
-  nic1_private_ips_list = tolist(aws_network_interface.nic1.private_ips)
-}
-
 data "template_file" "configmap" {
   template = "${file("../vpc/helloworld.configmap.example")}"
   vars = {
-    private_ip = "${local.nic1_private_ips_list[1]}"
+    private_ip = "${aws_network_interface.nic1.private_ip}"
   }
 }
 
