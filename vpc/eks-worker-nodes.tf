@@ -78,7 +78,7 @@ resource "aws_eks_node_group" "demo" {
   }
 
   remote_access {
-    ec2_ssh_key = "${var.keypair}"
+    ec2_ssh_key = "${aws_key_pair.demo.key_name}"
   }
 
   depends_on = [
