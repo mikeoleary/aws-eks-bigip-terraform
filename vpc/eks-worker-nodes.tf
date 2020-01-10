@@ -72,14 +72,13 @@ resource "aws_eks_node_group" "demo" {
   subnet_ids      = "${aws_subnet.private[*].id}"
 
   scaling_config {
-    desired_size = 1
-    max_size     = 1
-    min_size     = 1
+    desired_size = 2
+    max_size     = 2
+    min_size     = 2
   }
 
   remote_access {
     ec2_ssh_key = "${var.keypair}"
-  #  source_security_group_ids = 
   }
 
   depends_on = [

@@ -17,9 +17,3 @@ variable "as3_rpm_url" {
 variable "vpc_cidr_block" {
   default = "10.0.0.0/16"
 }
-variable "vip_address" {
-  default = "10.0.200.0"
-}
-variable "keypair" {
-  default = "mikeo-keypair"
-}

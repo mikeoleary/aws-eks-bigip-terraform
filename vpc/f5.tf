@@ -53,7 +53,7 @@ resource "aws_instance" "f5" {
   }
   instance_type               = "m5.xlarge"
   user_data                   = "${data.template_file.f5_init.rendered}"
-  key_name                    = "${var.keypair}"
+  key_name                    = "${aws_key_pair.demo.key_name}"
   root_block_device { delete_on_termination = true }
 
   tags = {
