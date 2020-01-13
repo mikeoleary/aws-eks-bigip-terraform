@@ -28,7 +28,12 @@ resource "helm_release" "f5cis" {
     value = "cluster"
   }
   depends_on = [
-    "kubernetes_service_account.tiller", "kubernetes_cluster_role_binding.tiller", "aws_instance.f5", "null_resource.install_as3"
+    "kubernetes_service_account.tiller", 
+    "kubernetes_cluster_role_binding.tiller",
+    "aws_instance.f5", 
+    "null_resource.install_as3", 
+    "kubernetes_config_map.helloworld", 
+    "kubernetes_secret.f5cis"
   ]
 }
 
