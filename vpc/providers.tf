@@ -35,6 +35,7 @@ provider "kubernetes" {
 }
 
 provider "helm" {
+  version = "=0.10.4"
   install_tiller  = true
   namespace = "${kubernetes_service_account.tiller.metadata[0].namespace}"
   service_account = "${kubernetes_service_account.tiller.metadata[0].name}"
