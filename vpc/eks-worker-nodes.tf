@@ -25,12 +25,12 @@ POLICY
 
 resource "aws_iam_role_policy_attachment" "demo-node-AmazonEKSWorkerNodePolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-  role       = "${aws_iam_role.demo-node.name}"
+  role       = aws_iam_role.demo-node.name
 }
 
 resource "aws_iam_role_policy_attachment" "demo-node-AmazonEKS_CNI_Policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-  role       = "${aws_iam_role.demo-node.name}"
+  role       = aws_iam_role.demo-node.name
 }
 
 resource "aws_iam_role_policy_attachment" "demo-node-AmazonEC2ContainerRegistryReadOnly" {
@@ -82,9 +82,9 @@ resource "aws_eks_node_group" "demo" {
   }
 
   depends_on = [
-    "aws_iam_role_policy_attachment.demo-node-AmazonEKSWorkerNodePolicy",
-    "aws_iam_role_policy_attachment.demo-node-AmazonEKS_CNI_Policy",
-    "aws_iam_role_policy_attachment.demo-node-AmazonEC2ContainerRegistryReadOnly",
+    aws_iam_role_policy_attachment.demo-node-AmazonEKSWorkerNodePolicy,
+    aws_iam_role_policy_attachment.demo-node-AmazonEKS_CNI_Policy,
+    aws_iam_role_policy_attachment.demo-node-AmazonEC2ContainerRegistryReadOnly,
   ]
 }
 
@@ -93,11 +93,11 @@ resource "aws_security_group_rule" "update-for-8080" {
   description       = "Allow 8080"
   from_port         = 8080
   protocol          = "tcp"
-  security_group_id = "${aws_eks_node_group.demo.resources.0.remote_access_security_group_id}"
+  security_group_id = aws_eks_node_group.demo.resources.0.remote_access_security_group_id
   to_port           = 8080
   type              = "ingress"
 
   depends_on = [
-    "aws_eks_node_group.demo"
+    aws_eks_node_group.demo
   ]
 }

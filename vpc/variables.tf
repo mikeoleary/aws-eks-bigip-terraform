@@ -4,7 +4,7 @@
 
 variable "cluster-name" {
   default = "terraform-eks-demo"
-  type    = "string"
+  type    = string
 }
 
 variable "as3_rpm" {

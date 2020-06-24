@@ -14,7 +14,7 @@ resource "kubernetes_cluster_role_binding" "tiller" {
     api_group="rbac.authorization.k8s.io"
   }
   depends_on = [
-    "aws_eks_node_group.demo"
+    aws_eks_node_group.demo
   ]
 } 
 
@@ -24,6 +24,6 @@ resource "kubernetes_service_account" "tiller" {
     namespace = "kube-system"
   }
   depends_on = [
-    "aws_eks_node_group.demo"
+    aws_eks_node_group.demo
   ]
 }
