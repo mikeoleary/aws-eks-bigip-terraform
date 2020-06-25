@@ -18,10 +18,11 @@ resource "aws_vpc" "demo" {
 }
 
 resource "aws_subnet" "public" {
-  count = 2
-  availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
-  cidr_block        = "10.0.${count.index}.0/24"
-  vpc_id            = "${aws_vpc.demo.id}"
+  count                   = 2
+  availability_zone       = "${data.aws_availability_zones.available.names[count.index]}"
+  cidr_block              = "10.0.${count.index}.0/24"
+  vpc_id                  = "${aws_vpc.demo.id}"
+  map_public_ip_on_launch = true
 
   tags = "${
     map(
@@ -35,6 +36,7 @@ resource "aws_subnet" "private" {
   availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
   cidr_block        = "10.0.${(count.index+2)}.0/24"
   vpc_id            = "${aws_vpc.demo.id}"
+  map_public_ip_on_launch = true
 
   tags = "${
     map(
@@ -48,6 +50,7 @@ resource "aws_subnet" "mgmt" {
   availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
   cidr_block        = "10.0.${(count.index+4)}.0/24"
   vpc_id            = "${aws_vpc.demo.id}"
+  map_public_ip_on_launch = true
 
   tags = "${
     map(

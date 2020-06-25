@@ -35,7 +35,7 @@ resource "kubernetes_deployment" "f5helloworld-deployment" {
     }
   }
   depends_on = [
-    "aws_eks_node_group.demo"
+    aws_eks_node_group.demo
   ]
 }
 
@@ -62,7 +62,7 @@ resource "kubernetes_service" "f5helloworld" {
     type = "ClusterIP"
   }
   depends_on = [
-    "aws_eks_node_group.demo"
+    aws_eks_node_group.demo
   ]
 }
 
@@ -84,9 +84,9 @@ resource "kubernetes_config_map" "helloworld" {
     }
   }
   data = {
-    template = "${data.template_file.configmap.rendered}"
+    template = data.template_file.configmap.rendered
   }
-    depends_on = [
-    "kubernetes_service.f5helloworld"
+  depends_on = [
+    kubernetes_service.f5helloworld
   ]
 }
